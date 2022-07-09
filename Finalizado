@@ -1,0 +1,235 @@
+SetErrorMode(2)
+		SetWindowTitle( "Princess Game" )
+		SetVirtualResolution( 1193, 930)
+
+
+		//variavel Global
+		Global Jogototal = 0
+			
+		
+		//Bloco das variáveis
+		posicaoX as integer = 600
+		posicaoY as integer = 650
+		Global flor
+		Global veneno
+		Global coroa
+		Global macaPodre
+		Global princesa
+		Global castelo
+		
+		
+		//Variaveis usaveis
+		Pontos = 0
+
+		
+		
+		Function Jogo()
+		//tela de fundo
+		castelo = CreateSprite(LoadImage("castelo.png")) 
+
+		//Colocando e tocando música de fundo
+		LoadMusic(1,"musica.mp3")
+		PlayMusic(1,1)
+
+		
+		//CreateSprite(LoadImage(""))
+		imag1 = LoadImage("flor.png")
+		imag2 = LoadImage("veneno.png")
+		imag3 = LoadImage("coroa.png")
+		imag4 = LoadImage("macaPodre.png")
+
+		//Criando Sprite e colocando-as em variaveis 
+		flor = CreateSprite(imag1)
+		veneno = CreateSprite(imag2)
+		coroa = CreateSprite(imag3)
+		macaPodre = CreateSprite(imag4)
+		
+
+		//Definindo tamanho das sprites
+		SetSpriteSize(flor, 90, 90)
+		SetSpriteSize(veneno, 90, 90)
+		SetSpriteSize(coroa,90,90)
+		SetSpriteSize(macaPodre,90,90)
+
+		//Sprites da princesa
+		princesa = CreateSprite(princesa)
+
+		AddSpriteAnimationFrame(princesa, LoadImage("princesa01.png"))
+		AddSpriteAnimationFrame(princesa, LoadImage("princesa02.png"))
+		AddSpriteAnimationFrame(princesa, LoadImage("princesa03.png"))
+		AddSpriteAnimationFrame(princesa, LoadImage("princesa04.png"))
+
+		SetSpriteSize(princesa, 170, 170)
+		PlaySprite ( princesa, 4, 1, 1, 4)
+		
+
+		//Definindo tipo de colisão
+		SetSpriteShape(flor, 2)
+		SetSpriteShape(princesa, 2)
+		SetSpriteShape(veneno, 2)
+		SetSpriteShape(coroa, 2)
+		SetSpriteShape(macaPodre, 2)
+		
+		endfunction
+		
+	Function Menu()
+		fundo = CreateSprite( LoadImage("menu.png"))
+		
+	if GetRawKeyPressed(13) = 1
+		Jogototal = 1
+		DeleteSprite(fundo)
+		Jogo()
+	endif
+	endfunction
+
+
+do
+			
+
+		
+			if Jogototal = 0
+				Menu()
+			endif	
+			
+		if Jogototal = 1
+			
+			
+			//Usando pontuação
+			SetPrintColor(0,0,0)
+			PrintC("Pontos: ")
+			PrintC(Pontos)
+   
+    
+			SetSpritePosition(princesa, posicaoX, posicaoY)
+			// Move Sprite para direita
+			if GetRawKeyState( 39 )  
+			posicaoX = posicaoX + 10
+			SetSpriteFlip( princesa, 180, 0)
+
+
+			// Move Sprite para esquerda
+			elseif GetRawKeyState ( 37 )
+			posicaoX = posicaoX - 10
+			SetSpriteFlip( princesa, 0, 0)
+			endif
+    
+    
+			//Delimitando a borda do game
+			if posicaoX < 0
+			posicaoX = 0
+			endif
+			if posicaoX > GetVirtualWidth() - GetSpriteWidth(princesa)
+			posicaoX = GetVirtualWidth() - GetSpriteWidth(princesa)
+			endif
+	
+		
+			//Definir as definições da coroa
+			//------------------------------------------
+			SetSpritePosition(coroa,Tvariavel,GetSpriteY(coroa) + 4.5)
+    
+			If GetSpriteCollision(princesa,coroa) = 1
+				Tvariavel = 0
+				SetSpritePosition(coroa,Tvariavel,0)
+				Tvariavel = Random(0,700) //a melhor forma encontrada foi criar uma variavel que recebia um valor random
+				Pontos = Pontos + 5
+			endif
+	
+	
+			//Caso não pegue a coroa
+			If GetSpriteY(coroa) > 930
+				SetSpritePosition(coroa,Tvariavel,0)
+				Tvariavel = Random(0,700)
+			Endif		
+    
+    
+			//Definir as definições da flor
+			//-----------------------------------------------------
+			SetSpritePosition(flor, Xvariavel , GetSpriteY(flor)+ 4.5)
+   
+	
+			//Colisão da flor com o princesa
+			If GetSpriteCollision(princesa, flor) = 1
+				Xvariavel = 0
+				SetSpritePosition(flor, Xvariavel, 0)
+				Xvariavel = Random(0,700)
+				Pontos = Pontos + 5
+			Endif
+	
+	
+			//Caso não pegue a flor
+			If GetSpriteY(flor) > 930
+				SetSpritePosition(flor, Xvariavel, 0)
+				Xvariavel = Random(0,700)
+		
+			Endif
+
+			//Definir as definições do veneno
+			//--------------------------------------------------------
+	
+			SetSpritePosition(veneno, Zvariavel , GetSpriteY(veneno)+4.5)
+    
+    
+			//Colisão da veneno com princesa
+			If GetSpriteCollision(princesa, veneno) = 1
+				Zvariavel = 0
+				SetSpritePosition(veneno, Zvariavel, 0)
+				Zvariavel = Random(0,700)
+				Pontos = Pontos - 5
+			Endif
+	
+	
+			//Caso não pegue o veneno
+			If GetSpriteY(veneno) > 930
+				SetSpritePosition(veneno, Zvariavel, 0)
+				Zvariavel = Random(0,700)
+		
+			Endif
+			
+			//Definir as definições da macaPodre
+			//--------------------------------------------------------
+	
+			SetSpritePosition(macaPodre, Gvariavel , GetSpriteY(macaPodre)+4.5)
+    
+    
+			//Colisão da maça podre com princesa
+			If GetSpriteCollision(princesa, macaPodre) = 1
+				Gvariavel = 0
+				SetSpritePosition(macaPodre, Gvariavel, 0)
+				Gvariavel = Random(0,700)
+				Pontos = Pontos - 5
+			Endif
+	
+	
+			//Caso não pegue a maça podre
+			If GetSpriteY(macaPodre) > 930
+				SetSpritePosition(macaPodre, Gvariavel, 0)
+				Gvariavel = Random(0,700)
+		
+			Endif
+		
+		
+		
+				//Caso o tempo passe de 60 segundos 
+				If (Timer () > 60)
+					DeleteSprite(castelo)
+					Jogototal = 2
+			
+				Endif	
+				
+				
+			Endif
+			
+				if Jogototal = 2
+			final = CreateSprite ( LoadImage ( "final.png" ) )
+			SetPrintColor(0, 0, 0)
+			SetPrintSize(100)
+			Print("")
+			Print("")
+			Print("")
+			Print("")
+			PrintC("  Pontuação:")
+			Print(Pontos)
+			
+		endif
+			Sync()
+loop
